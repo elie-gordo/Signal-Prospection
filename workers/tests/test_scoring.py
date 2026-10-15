@@ -96,9 +96,9 @@ def test_missing_website_only_claimed_after_web_search():
 
 
 def test_contactable_company_gets_bonus():
-    company = {"name": "SALON NACRE", "naf_code": "96.02A", "website": "https://salon-nacre.fr",
+    company = {"name": "SALON NACRE", "naf_code": "96.02A", "website": "https://salon-nacre.example",
                "founded_on": date(2026, 10, 1), "enriched_at": NOW, "discovered_at": NOW,
-               "email": "bonjour@salon-nacre.fr", "phone": None}
+               "email": "bonjour@salon-nacre.example", "phone": None}
     score, reasons = score_lead({"signal": "new_company"}, company, {"score": 90}, NOW, ["9602"])
     assert "Contactable (email ou téléphone)" in labels(reasons)
     assert score == 65  # 25+20+10+10
