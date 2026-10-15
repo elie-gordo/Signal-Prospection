@@ -2,9 +2,9 @@ import { SourceTag } from "@/components/LeadBits";
 import type { Source } from "@/lib/types";
 
 const PIPELINE = [
-  { step: "01", title: "Collecter", body: "Des workers Python interrogent des sources publiques et des API rétro-ingéniées, puis dédupliquent par (source, id)." },
-  { step: "02", title: "Enrichir", body: "Chaque SIREN est complété via l'API Recherche d'entreprises : NAF, dirigeant, date de création, effectif. Le site web est deviné puis vérifié." },
-  { step: "03", title: "Auditer", body: "Le site est chargé et noté sur 100 : HTTPS, temps de chargement, poids, responsive, CMS, copyright figé." },
+  { step: "01", title: "Collecter", body: "Chaque matin, des workers Python interrogent des sources publiques et dédupliquent par (source, id)." },
+  { step: "02", title: "Enrichir", body: "Chaque SIREN est complété via l'API Recherche d'entreprises. Le site est cherché via un SearXNG local et retenu seulement s'il affiche le SIREN ou l'adresse." },
+  { step: "03", title: "Auditer", body: "Le site est noté sur 100 (HTTPS, vitesse, poids, responsive, CMS, copyright figé) et ses contacts publics extraits." },
   { step: "04", title: "Scorer", body: "Un barème transparent additionne des raisons lisibles. Chaque point du score est justifié dans la fiche lead." },
   { step: "05", title: "Agir", body: "Les leads chauds remontent en tête ; le pipeline (qualifié, contacté, gagné) et les notes vivent dans le dashboard." },
 ];
@@ -12,12 +12,10 @@ const PIPELINE = [
 const SOURCES_INFO: { source: Source; signal: string; how: string }[] = [
   { source: "bodacc", signal: "Entreprise créée cette semaine", how: "API open data BODACC (immatriculations)" },
   { source: "codeur", signal: "Projet web / IA publié", how: "Flux RSS public, filtré par mots-clés" },
-  { source: "wttj", signal: "Recrute un profil dev / no-code", how: "API interne capturée avec reverse-api-engineer" },
-  { source: "pagesjaunes", signal: "Commerce local au site daté", how: "Capture navigateur + audit du site" },
 ];
 
 const STACK = [
-  ["Collecte", "Python 3.11, httpx, selectolax, uv, pytest"],
+  ["Collecte", "Python 3.11, httpx, selectolax, SearXNG, Docker, pytest"],
   ["Données", "PostgreSQL 16, schéma partagé, upserts idempotents"],
   ["Interface", "Next.js 15 (App Router, Server Actions), TypeScript, Tailwind v4"],
 ];
@@ -32,8 +30,7 @@ export default function MethodPage() {
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
           Signal détecte les entreprises qui ont un besoin <em>maintenant</em> : elles viennent d&apos;être créées, publient un
-          projet, recrutent un développeur ou ont un site qui les dessert. Chaque lead arrive avec la raison pour laquelle il
-          mérite un message.
+          projet ou ont un site qui les dessert. Chaque lead arrive avec la raison pour laquelle il mérite un message.
         </p>
       </header>
 
@@ -54,7 +51,7 @@ export default function MethodPage() {
         <div>
           <h2 id="sources" className="font-display text-3xl">Sources de signaux</h2>
           <p className="mt-3 text-sm leading-relaxed text-muted">
-            Open data quand elle existe ; rétro-ingénierie des API internes quand elle n&apos;existe pas.
+            Uniquement des données publiques et ouvertes : open data et flux publiés par les plateformes.
           </p>
         </div>
         <ul className="divide-y divide-line border-y border-line">

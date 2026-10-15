@@ -16,7 +16,7 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   title: "Signal — prospection par signaux d'achat",
   description:
-    "Détecte les entreprises qui ont besoin d'un site ou d'une automatisation maintenant : créations BODACC, projets publiés, recrutements, sites faibles.",
+    "Détecte les entreprises qui ont besoin d'un site ou d'une automatisation maintenant : créations BODACC, projets publiés, sites faibles.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

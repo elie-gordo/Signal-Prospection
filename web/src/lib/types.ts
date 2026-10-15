@@ -1,7 +1,7 @@
-export const SOURCES = ["bodacc", "codeur", "wttj", "pagesjaunes", "malt"] as const;
+export const SOURCES = ["bodacc", "codeur"] as const;
 export type Source = (typeof SOURCES)[number];
 
-export const SIGNALS = ["new_company", "project_posted", "hiring", "weak_website"] as const;
+export const SIGNALS = ["new_company", "project_posted"] as const;
 export type Signal = (typeof SIGNALS)[number];
 
 export const STATUSES = ["new", "qualified", "contacted", "replied", "won", "lost", "ignored"] as const;

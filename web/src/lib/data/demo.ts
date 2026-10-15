@@ -41,10 +41,10 @@ export function computeStats(leads: readonly LeadDetail[], now: number): Dashboa
       .sort((a, b) => b.count - a.count),
     byDay: days.map((day) => ({ day, count: dayCount.get(day) ?? 0 })),
     scoreBuckets: buckets,
-    lastRuns: SOURCES.filter((s) => s !== "malt").map((source, i) => ({
+    lastRuns: SOURCES.map((source, i) => ({
       source,
       finishedAt: new Date(now - (i + 1) * 3_600_000).toISOString(),
-      inserted: [12, 7, 4, 9][i] ?? 0,
+      inserted: [12, 7][i] ?? 0,
       error: null,
     })),
   };

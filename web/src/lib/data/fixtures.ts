@@ -54,11 +54,6 @@ const PROJECTS = [
   ["Migration Wix vers WordPress + SEO", "site", 500, 1000],
 ] as const;
 
-const JOBS = [
-  "Développeur·se Full-Stack JS (CDI)", "Chargé·e d'automatisation no-code", "Product Builder IA / n8n",
-  "Développeur·se WordPress / WooCommerce", "Growth Engineer", "Développeur·se React freelance (3 mois)",
-] as const;
-
 const DAY = 86_400_000;
 const NOW = Date.UTC(2026, 9, 14, 9, 0, 0);
 
@@ -117,19 +112,27 @@ function finalize(reasons: ScoreReason[]): { score: number; scoreReasons: ScoreR
 
 function bodaccLead(): LeadDetail {
   const c = company({ foundedOn: new Date(NOW - int(1, 25) * DAY).toISOString().slice(0, 10), employeeRange: "0 salarié" });
-  const hasSite = rand() > 0.75;
+  const hasSite = rand() > 0.7;
   const site = hasSite ? `https://${c.name.toLowerCase().normalize("NFD").replace(/[^a-z]+/g, "-")}.example` : null;
   const a = site ? audit(site) : null;
-  const reasons: ScoreReason[] = [{ label: "Nouvelle entreprise", points: 25 }, { label: "Secteur cible", points: 20 }];
+  const contacts = site
+    ? { email: `contact@${new URL(site).hostname}`, phone: `01 99 00 ${int(10, 99)} ${int(10, 99)}` } // ARCEP fiction range
+    : { email: null, phone: null };
+  const reasons: ScoreReason[] = [
+    { label: "Nouvelle activité immatriculée", points: 25 },
+    { label: `Secteur cible (NAF ${c.nafCode})`, points: 20 },
+  ];
   if (!site) reasons.push({ label: "Aucun site web trouvé", points: 25 });
   else if (a && a.score < 50) reasons.push({ label: `Site faible (audit ${a.score}/100)`, points: 20 });
+  else if (a && a.score < 75) reasons.push({ label: `Site perfectible (audit ${a.score}/100)`, points: 10 });
+  if (site) reasons.push({ label: "Contactable (email ou téléphone)", points: 10 });
   reasons.push({ label: "Créée il y a moins de 30 jours", points: 10 });
   const published = NOW - int(0, 13) * DAY - int(0, 20) * 3_600_000;
   return {
     id: leadSeq++, source: "bodacc", signal: "new_company", title: c.name, description: c.activity,
     url: null, budgetMin: null, budgetMax: null, ...finalize(reasons), status: pick(STATUS_POOL), notes: null,
     publishedAt: new Date(published).toISOString(), collectedAt: new Date(published + 3_600_000).toISOString(),
-    company: { ...c, website: site, websiteSource: site ? "guessed" : null }, audit: a,
+    company: { ...c, website: site, websiteSource: site ? "search" : null, ...contacts }, audit: a,
   };
 }
 
@@ -152,46 +155,8 @@ function codeurLead(): LeadDetail {
   };
 }
 
-function wttjLead(): LeadDetail {
-  const c = company({ employeeRange: pick(["10 à 19 salariés", "20 à 49 salariés", "50 à 99 salariés"]) });
-  const title = pick(JOBS);
-  const reasons: ScoreReason[] = [{ label: "Recrute un profil tech", points: 35 }];
-  if (/automatisation|IA|n8n|no-code/i.test(title)) reasons.push({ label: "Besoin automatisation / IA", points: 25 });
-  if (/freelance/i.test(title)) reasons.push({ label: "Ouvert aux freelances", points: 20 });
-  reasons.push({ label: "PME 10-100 salariés", points: 10 });
-  const published = NOW - int(0, 13) * DAY;
-  return {
-    id: leadSeq++, source: "wttj", signal: "hiring", title: `${title} — ${c.name}`,
-    description: `${c.name} recrute : ${title}.`, url: null, budgetMin: null, budgetMax: null, ...finalize(reasons),
-    status: pick(STATUS_POOL), notes: null, publishedAt: new Date(published).toISOString(),
-    collectedAt: new Date(published + 7_200_000).toISOString(), company: c, audit: null,
-  };
-}
-
-function pagesJaunesLead(): LeadDetail {
-  const c = company();
-  const site = `http://www.${c.name.toLowerCase().normalize("NFD").replace(/[^a-z]+/g, "")}.example`;
-  const a = audit(site);
-  const reasons: ScoreReason[] = [{ label: "Commerce local établi", points: 20 }, { label: "Secteur cible", points: 20 }];
-  if (a.score < 50) reasons.push({ label: `Site faible (audit ${a.score}/100)`, points: 30 });
-  else if (a.score < 75) reasons.push({ label: `Site perfectible (audit ${a.score}/100)`, points: 15 });
-  const published = NOW - int(0, 13) * DAY;
-  return {
-    id: leadSeq++, source: "pagesjaunes", signal: "weak_website", title: c.name, description: c.activity,
-    url: null, budgetMin: null, budgetMax: null, ...finalize(reasons), status: pick(STATUS_POOL), notes: null,
-    publishedAt: new Date(published).toISOString(), collectedAt: new Date(published).toISOString(),
-    company: {
-      ...c, website: site, websiteSource: "source",
-      foundedOn: new Date(NOW - int(800, 6000) * DAY).toISOString().slice(0, 10),
-      email: `contact@${new URL(site).hostname.replace(/^www\./, "")}`,
-      phone: `01 99 00 ${int(10, 99)} ${int(10, 99)}`, // ARCEP range reserved for fiction
-    },
-    audit: a,
-  };
-}
-
 const BUILDERS: [Source, () => LeadDetail, number][] = [
-  ["bodacc", bodaccLead, 48], ["codeur", codeurLead, 34], ["wttj", wttjLead, 18], ["pagesjaunes", pagesJaunesLead, 26],
+  ["bodacc", bodaccLead, 70], ["codeur", codeurLead, 40],
 ];
 
 export const DEMO_NOW = NOW;

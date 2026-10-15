@@ -14,9 +14,6 @@
   --cool: #2f6b57;
   --src-bodacc: #3a4fb0;
   --src-codeur: #7b3fa0;
-  --src-wttj: #1f7a6b;
-  --src-pagesjaunes: #a8800a;
-  --src-malt: #c2416b;
   --grain-opacity: 0.05;
 }
 
@@ -35,9 +32,6 @@
     --cool: #5fae92;
     --src-bodacc: #8193ea;
     --src-codeur: #b98ad6;
-    --src-wttj: #4fbfa9;
-    --src-pagesjaunes: #e0bd4a;
-    --src-malt: #ec7aa0;
     --grain-opacity: 0.035;
   }
 }

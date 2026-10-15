@@ -44,9 +44,9 @@ CREATE INDEX IF NOT EXISTS site_audits_company_idx ON site_audits (company_id, c
 
 CREATE TABLE IF NOT EXISTS leads (
   id              BIGSERIAL PRIMARY KEY,
-  source          TEXT NOT NULL,     -- 'bodacc' | 'codeur' | 'wttj' | 'pagesjaunes' | 'malt'
+  source          TEXT NOT NULL,     -- 'bodacc' | 'codeur'
   external_id     TEXT NOT NULL,
-  signal          TEXT NOT NULL,     -- 'new_company' | 'project_posted' | 'hiring' | 'weak_website'
+  signal          TEXT NOT NULL,     -- 'new_company' | 'project_posted'
   title           TEXT NOT NULL,
   description     TEXT,
   url             TEXT,

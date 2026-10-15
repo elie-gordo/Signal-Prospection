@@ -3,16 +3,11 @@ import type { LeadStatus, Signal, Source } from "./types";
 export const SOURCE_LABEL: Record<Source, string> = {
   bodacc: "BODACC",
   codeur: "Codeur",
-  wttj: "Welcome to the Jungle",
-  pagesjaunes: "Pages Jaunes",
-  malt: "Malt",
 };
 
 export const SIGNAL_LABEL: Record<Signal, string> = {
   new_company: "Nouvelle entreprise",
   project_posted: "Projet publié",
-  hiring: "Recrutement tech",
-  weak_website: "Site faible",
 };
 
 export const STATUS_LABEL: Record<LeadStatus, string> = {
