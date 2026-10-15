@@ -1,0 +1,58 @@
+SIGNAL — PROSPECTION PAR SIGNAUX D'ACHAT
+========================================
+
+Lien du repo : https://github.com/elie-gordo/Signal-Prospection
+
+
+CONTEXTE
+--------
+En freelance, la prospection classique fonctionne mal : on achète une liste et on envoie le même message à tout le monde, au mauvais moment. Or une entreprise a besoin d'un développeur web à des moments précis, et ces moments laissent des traces publiques : une immatriculation récente, un projet publié sur une plateforme, un site lent ou non sécurisé. J'ai voulu un outil qui repère ces signaux chaque matin et qui explique, pour chaque entreprise, pourquoi elle mérite un message.
+
+
+RÔLE
+----
+J'ai conçu et développé le projet seul, de bout en bout :
+- architecture du système et schéma de base de données ;
+- workers Python : collecte de données ouvertes, enrichissement, recherche des sites web, audit technique, extraction des contacts ;
+- barème de scoring explicable ;
+- dashboard Next.js et sa direction artistique ;
+- déploiement automatisé avec Docker.
+
+Je me suis aussi assuré du respect du RGPD et des CGU des plateformes.
+
+
+OUTILS
+------
+- Collecte et traitement : Python, httpx, selectolax, pytest.
+- Données : PostgreSQL, API BODACC et API Recherche d'entreprises (open data), flux RSS de Codeur.com.
+- Recherche : SearXNG auto-hébergé, pour trouver les sites sans API payante.
+- Interface : Next.js 15 (Server Components, Server Actions), React 19, TypeScript, Tailwind CSS v4.
+- Infrastructure : Docker Compose, avec un daemon de planification quotidienne.
+
+
+RÉSULTAT
+--------
+Un outil que j'utilise au quotidien et qui tourne seul chaque matin à 7 h.
+- Volume : environ 1 500 créations d'entreprises analysées tous les 3 jours en Île-de-France, plus les projets web publiés sur Codeur.
+- Scoring sur 100 : chaque point est justifié dans la fiche du lead, sans boîte noire.
+- Fiabilité : chaque site doit prouver qu'il appartient à l'entreprise (SIREN ou adresse affichés sur la page). Cette règle a éliminé 8 faux sites sur 12 lors des tests.
+- Qualité : 54 tests automatisés.
+- Démo : un mode démo avec données fictives permet de montrer le projet sans exposer de données réelles.
+
+
+ÉTIQUETTES
+----------
+Domaine : Prospection B2B, Automatisation, Data / Open data, Web app
+Outils  : Python, Next.js, React, TypeScript, PostgreSQL, Docker, Tailwind CSS, SearXNG
+Année   : 2026
+
+
+CAPTURES (16:9, 3200x1800, données fictives)
+--------------------------------------------
+01-dashboard.png          Tableau de bord : leads chauds, KPI, graphiques
+02-leads.png              Liste des leads filtrable
+03-lead-entreprise.png    Fiche d'une nouvelle entreprise et détail du score
+04-audit-site.png         Infos de l'entreprise et audit du site
+05-lead-projet.png        Fiche d'un projet Codeur à 90 points
+06-methode.png            Page Méthode : le pipeline en 5 étapes
+07-dashboard-sombre.png   Tableau de bord en thème sombre
