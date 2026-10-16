@@ -15,6 +15,7 @@ export default async function Dashboard() {
   const sourceMax = Math.max(1, ...stats.bySource.map((s) => s.count));
 
   const kpis = [
+    { label: "Leads chauds", value: stats.hot, tone: "text-signal", href: `/leads?min=${HOT_SCORE}` },
     { label: "Signaux · 7 j", value: stats.last7Days },
     { label: "Au total", value: stats.total },
     { label: "Contactés", value: stats.contacted },
@@ -23,62 +24,66 @@ export default async function Dashboard() {
 
   return (
     <>
-      <section className="grid gap-8 border-b border-line pb-10 pt-12 lg:grid-cols-[1.4fr_1fr] lg:items-end">
-        <div className="rise">
-          <p className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-muted">{today}</p>
-          <h1 className="font-display text-[clamp(2.75rem,1.6rem+4.6vw,5.5rem)] leading-[0.95] tracking-tight">
-            <Link href={`/leads?min=${HOT_SCORE}`} className="text-signal decoration-2 underline-offset-8 hover:underline">
-              {stats.hot} leads chauds
-            </Link>
-            <br />
-            <span className="italic text-ink-soft">attendent une réponse.</span>
-          </h1>
-        </div>
-        <dl className="rise grid grid-cols-2 border-t border-line" style={{ animationDelay: "80ms" }}>
-          {kpis.map((k, i) => (
-            <div key={k.label} className={`border-b border-line py-4 ${i % 2 === 0 ? "border-r pr-4" : "pl-4"}`}>
-              <dt className="font-mono text-[11px] uppercase tracking-wider text-muted">{k.label}</dt>
-              <dd className={`mt-1 font-mono text-3xl font-semibold tabular ${k.tone ?? ""}`}>{k.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+      <header className="pb-6 pt-10">
+        <p className="text-sm first-letter:uppercase text-muted">{today}</p>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight">Tableau de bord</h1>
+      </header>
 
-      <div className="grid gap-12 pt-10 lg:grid-cols-[1.4fr_1fr]">
-        <section aria-labelledby="priority">
-          <div className="mb-2 flex items-baseline justify-between">
-            <h2 id="priority" className="font-display text-3xl">À traiter en priorité</h2>
-            <Link href="/leads" className="text-sm text-muted underline-offset-4 hover:text-ink hover:underline">
+      <dl className="grid grid-cols-2 overflow-hidden rounded-lg border border-line bg-surface sm:grid-cols-5">
+        {kpis.map((k) => {
+          const value = <span className={`mt-1 block text-2xl font-semibold tabular ${k.tone ?? ""}`}>{k.value}</span>;
+          return (
+            <div key={k.label} className="border-b border-r border-line p-4 sm:border-b-0 sm:last:border-r-0">
+              <dt className="text-xs text-muted">{k.label}</dt>
+              <dd>
+                {k.href ? (
+                  <Link href={k.href} className="block rounded-sm hover:underline focus-visible:outline-2 focus-visible:outline-ink">
+                    {value}
+                  </Link>
+                ) : (
+                  value
+                )}
+              </dd>
+            </div>
+          );
+        })}
+      </dl>
+
+      <div className="grid gap-6 pt-6 lg:grid-cols-[1.6fr_1fr]">
+        <section aria-labelledby="priority" className="overflow-hidden rounded-lg border border-line bg-surface lg:self-start">
+          <div className="flex items-baseline justify-between border-b border-line px-4 py-3">
+            <h2 id="priority" className="text-sm font-semibold">À traiter en priorité</h2>
+            <Link href="/leads" className="text-sm text-muted hover:text-ink">
               Tous les leads →
             </Link>
           </div>
           {top.length === 0 ? (
-            <p className="border-y border-dashed border-line py-10 text-center text-muted">
+            <p className="px-4 py-10 text-center text-sm text-muted">
               Aucun lead pour l&apos;instant. Lance <code className="font-mono text-ink">uv run prospect run</code>.
             </p>
           ) : (
             <ol>
-              {top.map((lead, i) => (
-                <LeadRow key={lead.id} lead={lead} now={now} index={i} />
+              {top.map((lead) => (
+                <LeadRow key={lead.id} lead={lead} now={now} />
               ))}
             </ol>
           )}
         </section>
 
-        <aside className="space-y-10">
-          <section aria-labelledby="activity">
-            <h2 id="activity" className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Signaux · 14 jours</h2>
+        <aside className="space-y-6">
+          <section aria-labelledby="activity" className="rounded-lg border border-line bg-surface p-4">
+            <h2 id="activity" className="mb-4 text-sm font-semibold">Signaux sur 14 jours</h2>
             <ActivityChart data={stats.byDay} />
           </section>
 
-          <section aria-labelledby="scores">
-            <h2 id="scores" className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Distribution des scores</h2>
+          <section aria-labelledby="scores" className="rounded-lg border border-line bg-surface p-4">
+            <h2 id="scores" className="mb-4 text-sm font-semibold">Distribution des scores</h2>
             <ScoreHistogram data={stats.scoreBuckets} />
           </section>
 
-          <section aria-labelledby="sources">
-            <h2 id="sources" className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Sources</h2>
-            <ul className="space-y-2.5">
+          <section aria-labelledby="sources" className="rounded-lg border border-line bg-surface p-4">
+            <h2 id="sources" className="mb-3 text-sm font-semibold">Sources</h2>
+            <ul className="space-y-3">
               {stats.bySource.map((s) => {
                 const run = stats.lastRuns.find((r) => r.source === s.source);
                 const runInfo = run?.error ? <span className="text-signal">erreur</span> : run ? timeAgo(run.finishedAt, now) : "";
@@ -87,14 +92,14 @@ export default async function Dashboard() {
                     <Link href={`/leads?source=${s.source}`} className="group block">
                       <div className="mb-1 flex items-baseline justify-between gap-2">
                         <SourceTag source={s.source} />
-                        <span className="font-mono text-xs tabular text-muted">
+                        <span className="text-xs tabular text-muted">
                           {runInfo}
-                          <span className="ml-3 text-ink">{s.count}</span>
+                          <span className="ml-3 font-medium text-ink">{s.count}</span>
                         </span>
                       </div>
-                      <span className="block h-1.5 overflow-hidden rounded-full bg-line">
+                      <span className="block h-1 overflow-hidden rounded-full bg-line">
                         <span
-                          className="block h-full rounded-full opacity-80 transition-opacity group-hover:opacity-100"
+                          className="block h-full rounded-full opacity-70 transition-opacity group-hover:opacity-100"
                           style={{ width: `${(s.count / sourceMax) * 100}%`, background: `var(--src-${s.source})` }}
                         />
                       </span>

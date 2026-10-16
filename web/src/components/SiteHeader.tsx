@@ -16,14 +16,14 @@ export function SiteHeader({ isDemo }: Props) {
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper/85 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-[1280px] items-center gap-6 px-4 sm:px-8">
-        <Link href="/" className="group flex items-baseline gap-2 focus-visible:outline-none">
-          <span className="relative inline-flex h-2.5 w-2.5">
-            <span className="absolute inset-0 animate-ping rounded-full bg-signal opacity-40 motion-reduce:hidden" />
-            <span className="relative h-2.5 w-2.5 rounded-full bg-signal" />
-          </span>
-          <span className="font-display text-2xl italic leading-none tracking-tight group-focus-visible:underline">Signal</span>
+    <header className="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-[1200px] items-center gap-8 px-4 sm:px-6">
+        <Link
+          href="/"
+          className="flex items-center gap-2 rounded-sm text-[15px] font-semibold tracking-tight focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
+        >
+          <span aria-hidden className="h-2 w-2 rounded-full bg-signal" />
+          Signal
         </Link>
 
         <nav aria-label="Navigation principale" className="flex items-center gap-1 text-sm">
@@ -32,7 +32,7 @@ export function SiteHeader({ isDemo }: Props) {
               key={item.href}
               href={item.href}
               aria-current={isActive(item.href) ? "page" : undefined}
-              className="rounded-full px-3 py-1.5 text-muted transition-colors hover:bg-surface hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal aria-[current=page]:bg-ink aria-[current=page]:text-paper"
+              className="rounded-md px-3 py-1.5 text-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink aria-[current=page]:bg-paper aria-[current=page]:font-medium aria-[current=page]:text-ink"
             >
               {item.label}
             </Link>
@@ -40,7 +40,7 @@ export function SiteHeader({ isDemo }: Props) {
         </nav>
 
         {isDemo && (
-          <span className="ml-auto hidden rounded-full border border-dashed border-line-strong px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-muted sm:inline">
+          <span className="ml-auto hidden rounded-md border border-line px-2 py-0.5 text-xs text-muted sm:inline">
             Démo · données fictives
           </span>
         )}
