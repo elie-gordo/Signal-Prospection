@@ -6,6 +6,8 @@ Signal est un outil de prospection B2B que j'utilise au quotidien en tant que d�
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-black) ![React](https://img.shields.io/badge/React-19-149eca) ![Python](https://img.shields.io/badge/Python-3.11-3776ab) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791) ![Docker](https://img.shields.io/badge/Docker-Compose-2496ed) ![Tests](https://img.shields.io/badge/tests-54%20passing-2f6b57)
 
+![Tableau de bord de Signal](docs/screenshots/01-dashboard.png)
+
 ---
 
 ## Sommaire
@@ -194,7 +196,7 @@ Les secteurs ciblés et exclus se règlent dans `.env` (`TARGET_NAF_PREFIXES`, `
 
 ## Le dashboard
 
-Direction visuelle « signal desk » : papier et encre, un seul accent orange réservé aux signaux forts, Instrument Serif pour les titres et Geist pour le texte, grain de papier discret, thème sombre automatique.
+Interface sobre, pensée comme un outil de travail : fond neutre, panneaux à bordure fine, Geist comme unique police, un seul accent orange réservé aux leads chauds et aux points faibles, thème sombre automatique.
 
 | Page | Contenu |
 |---|---|
@@ -211,6 +213,17 @@ Le dashboard passe par une interface `LeadRepository` avec deux implémentations
 - **`demo`** : 110 leads fictifs en lecture seule, pour une démo publique sans exposer de données réelles. Noms inventés, SIREN en `9xxxxxxxx`, domaines `.example`, téléphones dans la plage ARCEP réservée à la fiction (`01 99 00 xx xx`).
 
 On bascule de l'une à l'autre avec `DATA_SOURCE=postgres` ou `DATA_SOURCE=demo`.
+
+### Captures (mode démo, données fictives)
+
+| | |
+|---|---|
+| ![Liste des leads](docs/screenshots/02-leads.png) | ![Fiche d'une nouvelle entreprise](docs/screenshots/03-lead-entreprise.png) |
+| Liste filtrable des leads | Fiche lead : décomposition du score et pipeline |
+| ![Entreprise et audit du site](docs/screenshots/04-audit-site.png) | ![Fiche d'un projet Codeur](docs/screenshots/05-lead-projet.png) |
+| Données de l'entreprise et audit du site | Projet Codeur à 90 points |
+| ![Page Méthode](docs/screenshots/06-methode.png) | ![Tableau de bord en thème sombre](docs/screenshots/07-dashboard-sombre.png) |
+| Page Méthode | Thème sombre |
 
 ---
 
@@ -379,7 +392,7 @@ Classées par impact sur le chiffre d'affaires.
 ### Priorité 5 : portfolio
 
 - **Déployer la démo** sur Vercel en `DATA_SOURCE=demo`.
-- **Captures et GIF** du dashboard dans ce README.
+- **GIF de démonstration** du parcours (tableau de bord, fiche lead, changement de statut) dans ce README.
 - **CI GitHub Actions** : tests Python, tests web, lint et build à chaque push.
 
 ---
